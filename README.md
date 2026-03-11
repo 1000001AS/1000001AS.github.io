@@ -5,7 +5,8 @@ Welcome to the repository for our department's public website, hosted for free u
 Visit the site at: https://yourusername.github.io
 
 - What's in this repo
-FileDescriptionindex.htmlThe main website — homepage for our research groupREADME.md This file — explains what the project is and how to use it
+FileDescriptionindex.htmlThe main website — homepage for our research groupREADME.md
+This file — explains what the project is and how to use it
 
 -How to update the website
 
