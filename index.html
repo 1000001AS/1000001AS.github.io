@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Research & Education Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink: #0d0d0d;
+      --paper: #f5f0e8;
+      --accent: #c0392b;
+      --gold: #c9a84c;
+      --muted: #6b6560;
+      --line: #d6cfc4;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.5;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 4rem;
+      border-bottom: 1px solid var(--line);
+      position: sticky;
+      top: 0;
+      background: rgba(245,240,232,0.92);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    nav ul {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--ink); }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 90vh;
+      border-bottom: 1px solid var(--line);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.1s;
+    }
+
+    .hero-left {
+      padding: 6rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-right: 1px solid var(--line);
+    }
+
+    .hero-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 5vw, 5rem);
+      line-height: 1.05;
+      font-weight: 900;
+      margin-bottom: 1.8rem;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 38ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.85rem 2rem;
+      background: var(--ink);
+      color: var(--paper);
+      text-decoration: none;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.2s;
+      align-self: flex-start;
+    }
+
+    .btn:hover { background: var(--accent); transform: translateY(-2px); }
+
+    .hero-right {
+      padding: 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      background: var(--ink);
+      color: var(--paper);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-right::before {
+      content: '✦';
+      position: absolute;
+      top: -1rem;
+      right: -1rem;
+      font-size: 18rem;
+      opacity: 0.04;
+      line-height: 1;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .stat { border-top: 1px solid rgba(255,255,255,0.15); padding-top: 1.2rem; }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-top: 0.4rem;
+    }
+
+    .hero-right-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      font-style: italic;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 0.5rem;
+    }
+
+    /* MARQUEE */
+    .marquee-wrap {
+      overflow: hidden;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 0.9rem 0;
+      background: var(--ink);
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 3rem;
+      white-space: nowrap;
+      animation: marquee 18s linear infinite;
+    }
+
+    .marquee-track span {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    .marquee-track span.accent { color: var(--gold); }
+
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    /* RESEARCH */
+    #research {
+      padding: 6rem 4rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.3s;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .section-number {
+      font-size: 0.75rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5px;
+      background: var(--line);
+    }
+
+    .card {
+      background: var(--paper);
+      padding: 2.5rem;
+      transition: background 0.25s;
+      cursor: default;
+    }
+
+    .card:hover { background: #ede8de; }
+
+    .card-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.8rem;
+    }
+
+    .card-text {
+      font-size: 0.9rem;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .card-tag {
+      display: inline-block;
+      margin-top: 1.2rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    /* TEAM */
+    #team {
+      padding: 6rem 4rem;
+      background: var(--ink);
+      color: var(--paper);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
+    }
+
+    #team .section-title { color: var(--paper); }
+    #team .section-number { color: var(--gold); }
+    #team .section-header { border-color: rgba(255,255,255,0.1); }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+
+    .team-card {
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 2rem 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .team-card:hover { border-color: var(--gold); transform: translateY(-4px); }
+
+    .team-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+
+    .team-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .team-role {
+      font-size: 0.75rem;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 4rem;
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+
+    .footer-logo span { color: var(--accent); }
+
+    .footer-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .github-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      border: 1px solid var(--line);
+      padding: 0.4rem 0.9rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .github-badge:hover { border-color: var(--ink); color: var(--ink); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      nav ul { display: none; }
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { min-height: 320px; }
+      .hero-left, #research, #team, footer { padding: 3rem 1.5rem; }
+      .cards { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Research<span>Lab</span></div>
+  <ul>
+    <li><a href="#research">Research</a></li>
+    <li><a href="#team">Team</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <p class="hero-tag">Est. 2024 · Open Science Initiative</p>
+    <h1>Where <em>ideas</em> become discoveries</h1>
+    <p class="hero-desc">We are a multidisciplinary research group committed to open, reproducible, and impactful education research. Our work bridges theory and practice.</p>
+    <a href="#research" class="btn">Explore our work</a>
+  </div>
+  <div class="hero-right">
+    <p class="hero-right-title">By the numbers</p>
+    <div class="stat-grid">
+      <div class="stat">
+        <div class="stat-number">47</div>
+        <div class="stat-label">Publications</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">12</div>
+        <div class="stat-label">Researchers</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">8</div>
+        <div class="stat-label">Active Projects</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Continents</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="accent">✦</span><span>Open Data</span>
+    <span class="accent">✦</span><span>Reproducible Research</span>
+    <span class="accent">✦</span><span>Collaborative Science</span>
+    <span class="accent">✦</span><span>Education Innovation</span>
+    <span class="accent">✦</span><span>Knowledge Sharing</span>
+    <span class="accent">✦</span><span>Open Data</span>
+    <span class="accent">✦</span><span>Reproducible Research</span>
+    <span class="accent">✦</span><span>Collaborative Science</span>
+    <span class="accent">✦</span><span>Education Innovation</span>
+    <span class="accent">✦</span><span>Knowledge Sharing</span>
+    <span class="accent">✦</span><span>Open Data</span>
+    <span class="accent">✦</span><span>Reproducible Research</span>
+    <span class="accent">✦</span><span>Collaborative Science</span>
+    <span class="accent">✦</span><span>Education Innovation</span>
+    <span class="accent">✦</span><span>Knowledge Sharing</span>
+  </div>
+</div>
+
+<section id="research">
+  <div class="section-header">
+    <span class="section-number">01 — Research Areas</span>
+    <h2 class="section-title">What we study</h2>
+  </div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-icon">🔬</div>
+      <div class="card-title">Learning Sciences</div>
+      <p class="card-text">Investigating how people learn across formal and informal settings, with a focus on evidence-based pedagogical strategies.</p>
+      <span class="card-tag">Ongoing →</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Educational Data</div>
+      <p class="card-text">Applying data analytics and visualisation to uncover patterns in student performance and institutional outcomes.</p>
+      <span class="card-tag">Ongoing →</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🤝</div>
+      <div class="card-title">Collaborative Tools</div>
+      <p class="card-text">Designing and testing open-source platforms that make academic collaboration more accessible and transparent.</p>
+      <span class="card-tag">Ongoing →</span>
+    </div>
+  </div>
+</section>
+
+<section id="team">
+  <div class="section-header">
+    <span class="section-number">02 — Our People</span>
+    <h2 class="section-title">The team</h2>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">AM</div>
+      <div class="team-name">Dr. A. Morgan</div>
+      <div class="team-role">Principal Investigator</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">JL</div>
+      <div class="team-name">J. Liu</div>
+      <div class="team-role">Data Researcher</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">SR</div>
+      <div class="team-name">S. Reyes</div>
+      <div class="team-role">Curriculum Design</div>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">TK</div>
+      <div class="team-name">T. Kowalski</div>
+      <div class="team-role">Open Source Dev</div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="footer-logo">Research<span>Lab</span></div>
+  <p class="footer-note">Built with GitHub Pages · Open Source · 2024</p>
+  <a href="https://github.com" class="github-badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+    Hosted on GitHub
+  </a>
+</footer>
+
+</body>
+</html>
